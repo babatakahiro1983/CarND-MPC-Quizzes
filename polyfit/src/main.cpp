@@ -3,8 +3,12 @@
 #include <iostream>
 #include "Eigen-3.3/Eigen/Core"
 #include "Eigen-3.3/Eigen/QR"
+#include<fstream> 
+#include<string>
+#include<sstream>
 
 using namespace Eigen;
+using namespace std;
 
 // Evaluate a polynomial.
 double polyeval(Eigen::VectorXd coeffs, double x) {
@@ -40,6 +44,33 @@ Eigen::VectorXd polyfit(Eigen::VectorXd xvals, Eigen::VectorXd yvals,
 }
 
 int main() {
+
+	// Read waypoint
+	ifstream ifs("C:/Users/10001161181/Documents/GitHub/CarND-MPC-Quizzes/polyfit/src/lake_track_waypoints.csv");
+
+	if (!ifs) {
+		cout << "入力エラー";
+		return 1;
+	}
+
+
+	//csvファイルを1行ずつ読み込む
+	string str;
+	while (getline(ifs, str)) {
+		string token;
+		istringstream stream(str);
+
+		//1行のうち、文字列とコンマを分割する
+		while (getline(stream, token, ',')) {
+			//すべて文字列として読み込まれるため
+			//数値は変換が必要
+
+			int temp = stof(token); //stof(string str) : stringをfloatに変換
+			cout << temp << ",";
+		}
+		cout << endl;
+	}
+
   Eigen::VectorXd xvals(6);
   Eigen::VectorXd yvals(6);
   // x waypoint coordinates
