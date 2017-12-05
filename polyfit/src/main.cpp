@@ -6,6 +6,7 @@
 #include<fstream> 
 #include<string>
 #include<sstream>
+#include <vector> 
 
 using namespace Eigen;
 using namespace std;
@@ -56,27 +57,47 @@ int main() {
 
 	//csvファイルを1行ずつ読み込む
 	string str;
+	int cnt = 0;
+	std::vector<double> x_vec, y_vec;
+
 	while (getline(ifs, str)) {
 		string token;
 		istringstream stream(str);
+		int cnt_2 = 0;
 
 		//1行のうち、文字列とコンマを分割する
 		while (getline(stream, token, ',')) {
 			//すべて文字列として読み込まれるため
 			//数値は変換が必要
-
-			int temp = stof(token); //stof(string str) : stringをfloatに変換
-			cout << temp << ",";
+			if (cnt > 0) {
+				double temp = stof(token); //stof(string str) : stringをfloatに変換
+				if (cnt_2 == 0) {
+					//cout << temp << ",";
+					x_vec.push_back(temp);
+				}
+				else{
+					//cout << temp << ",";
+					y_vec.push_back(temp);
+				}
+				cnt_2 += 1;
+			}
+			
 		}
+		cnt += 1;
 		cout << endl;
 	}
 
-  Eigen::VectorXd xvals(6);
-  Eigen::VectorXd yvals(6);
+  Eigen::VectorXd xvals(x_vec.size());
+  Eigen::VectorXd yvals(y_vec.size());
+  for (int i = 0; i < x_vec.size(); i++) {
+	  xvals[i] = x_vec[i];
+	  yvals[i] = y_vec[i];
+  }
+
   // x waypoint coordinates
-  xvals << 9.261977, -2.06803, -19.6663, -36.868, -51.6263, -66.3482;
+  //xvals << 9.261977, -2.06803, -19.6663, -36.868, -51.6263, -66.3482;
   // y waypoint coordinates
-  yvals << 5.17, -2.25, -15.306, -29.46, -42.85, -57.6116;
+  //yvals << 5.17, -2.25, -15.306, -29.46, -42.85, -57.6116;
 
   // Pass the x and y waypoint coordinates along the order of the polynomial.
   // In this case, 3.
