@@ -6,7 +6,8 @@
 #include<fstream> 
 #include<string>
 #include<sstream>
-#include <vector> 
+#include <vector>
+#include <Windows.h>
 
 using namespace Eigen;
 using namespace std;
@@ -46,8 +47,12 @@ Eigen::VectorXd polyfit(Eigen::VectorXd xvals, Eigen::VectorXd yvals,
 
 int main() {
 
+	char cdir[255];
+	GetCurrentDirectory(255, cdir);
+	cout << "Current Directory : " << cdir << endl;
+
 	// Read waypoint
-	ifstream ifs("C:/Users/10001161181/Documents/GitHub/CarND-MPC-Quizzes/polyfit/src/lake_track_waypoints.csv");
+	ifstream ifs("../../lake_track_waypoints.csv");
 
 	if (!ifs) {
 		cout << "“ü—ÍƒGƒ‰[";
@@ -89,9 +94,10 @@ int main() {
 
   Eigen::VectorXd xvals(x_vec.size());
   Eigen::VectorXd yvals(y_vec.size());
+
   for (int i = 0; i < x_vec.size(); i++) {
-	  xvals[i] = x_vec[i];
-	  yvals[i] = y_vec[i];
+	  xvals(i) = x_vec[i];
+	  yvals(i) = y_vec[i];
   }
 
   // x waypoint coordinates
@@ -102,6 +108,7 @@ int main() {
   // Pass the x and y waypoint coordinates along the order of the polynomial.
   // In this case, 3.
   auto coeffs = polyfit(xvals, yvals, 3);
+  std::cout << coeffs << std::endl;
 
   for (double x = 0; x <= 20; x += 1.0) {
     // We can evaluate the polynomial at a x coordinate by calling `polyeval`.
